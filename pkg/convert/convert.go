@@ -71,3 +71,17 @@ func RoundDown(value float64, tickSize float64) float64 {
 	r, _ := rec.Float64()
 	return r
 }
+
+func RoundNext(value float64, tickSize float64) float64 {
+	decs := int32(math.Abs(math.Round(math.Log10(tickSize))))
+	v := decimal.NewFromFloat(value)
+	rec := v.Round(decs)
+	if rec.GreaterThan(v) {
+		rec = rec.Sub(decimal.NewFromFloat(tickSize))
+		if rec.IsNegative() {
+			rec = decimal.NewFromInt(0)
+		}
+	}
+	r, _ := rec.Float64()
+	return r
+}
